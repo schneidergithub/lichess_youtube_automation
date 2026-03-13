@@ -1,4 +1,4 @@
-# Lichess YouTube Automation V2
+# Lichess YouTube Automation
 
 Automated pipeline that converts Lichess puzzles into chess tactic videos and YouTube Shorts.
 
