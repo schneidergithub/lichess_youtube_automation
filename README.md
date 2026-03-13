@@ -8,11 +8,11 @@ Lichess Puzzle → Stockfish validation → Board animation → Script → Voice
 
 ## Features
 
-x Fetch puzzles from Lichess
-x Render animated chess boards
-- Generate narration
-- Build long videos and Shorts
-- Automated GitHub Actions execution
+- Fetch puzzles from Lichess
+- Render animated chess boards
+- TODO: Generate narration
+- TODO: Build long videos and Shorts
+- TODO: Automated GitHub Actions execution
 
 ## Repository layout
 
