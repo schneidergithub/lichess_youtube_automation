@@ -1,0 +1,12 @@
+
+python-chess
+requests
+gtts
+pillow
+cairosvg
+stockfish
+opencv-python
+moviepy
+google-api-python-client
+google-auth-oauthlib
+google-auth-httplib2
