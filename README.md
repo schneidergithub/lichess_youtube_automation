@@ -8,9 +8,8 @@ Lichess Puzzle → Stockfish validation → Board animation → Script → Voice
 
 ## Features
 
-- Fetch puzzles from Lichess
-- Render animated chess boards
-- Validate tactics using Stockfish
+x Fetch puzzles from Lichess
+x Render animated chess boards
 - Generate narration
 - Build long videos and Shorts
 - Automated GitHub Actions execution
@@ -29,11 +28,7 @@ Lichess Puzzle → Stockfish validation → Board animation → Script → Voice
    pip install -r requirements.txt
    ```
 
-2. Install Stockfish
-
-   Download Stockfish and place the binary in `engine/stockfish`.
-
-3. Configure environment
+2. Configure environment
 
    ```sh
    cp .env.example .env
@@ -44,5 +39,5 @@ Lichess Puzzle → Stockfish validation → Board animation → Script → Voice
 Invoke the only supported entrypoint:
 
 ```sh
-python scripts/pipeline.py
+python3 scripts/pipeline.py
 ```
