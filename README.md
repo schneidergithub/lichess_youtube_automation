@@ -1,4 +1,3 @@
-
 # Lichess YouTube Automation V2
 
 Automated pipeline that converts Lichess puzzles into chess tactic videos and YouTube Shorts.
@@ -16,27 +15,36 @@ Lichess Puzzle → Stockfish validation → Board animation → Script → Voice
 - Build long videos and Shorts
 - Automated GitHub Actions execution
 
+## Repository layout
+
+- `scripts/` contains the canonical implementation of each pipeline stage and the executable `scripts/pipeline.py` entrypoint.
+- `.github/workflows/daily_generation.yml` schedules the pipeline; no other root-level workflow files are maintained.
+- Supporting artifacts such as generated videos/shorts/thumbnails are excluded via `.gitignore`.
+
 ## Setup
 
-### 1 Install dependencies
+1. Install dependencies
 
-pip install -r requirements.txt
+   ```sh
+   pip install -r requirements.txt
+   ```
 
-### 2 Install Stockfish
+2. Install Stockfish
 
-Download Stockfish and place binary in:
+   Download Stockfish and place the binary in `engine/stockfish`.
 
-engine/stockfish
+3. Configure environment
 
-### 3 Configure environment
+   ```sh
+   cp .env.example .env
+   ```
 
-cp .env.example .env
+## Running the pipeline
 
-### 4 Run pipeline
+Invoke the only supported entrypoint:
 
+```sh
 python scripts/pipeline.py
+```
 
-### 5 Run automation
-
-GitHub workflow automatically generates videos.
-
+The GitHub workflow calls the same script, so references to the removed root-level modules should be updated accordingly.
