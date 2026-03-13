@@ -1,7 +1,7 @@
 
 from stockfish import Stockfish
 
-stockfish = Stockfish("engine/stockfish")
+stockfish = Stockfish("/usr/local/bin/stockfish")
 
 def best_move(fen):
     stockfish.set_fen_position(fen)

@@ -1,8 +1,11 @@
+from moviepy.video.io.ImageSequenceClip import ImageSequenceClip
+import glob
+from pathlib import Path
 
-from moviepy.editor import ImageSequenceClip, AudioFileClip
+def build_video(frame_dir="frames", output="videos/puzzle.mp4"):
+    Path("videos").mkdir(exist_ok=True)
 
-def build_video(frames):
+    frames = sorted(glob.glob(f"{frame_dir}/*.png"))
     clip = ImageSequenceClip(frames, fps=1)
-    audio = AudioFileClip("audio.mp3")
-    final = clip.set_audio(audio)
-    final.write_videofile("videos/puzzle.mp4", codec="libx264")
+
+    clip.write_videofile(output, codec="libx264", audio=False)

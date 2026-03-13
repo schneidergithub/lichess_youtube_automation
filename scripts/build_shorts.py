@@ -1,11 +1,21 @@
+from moviepy.video.io.VideoFileClip import VideoFileClip
+from pathlib import Path
 
-from moviepy.editor import VideoFileClip
 
-def build_shorts():
+def build_shorts(input_video="videos/puzzle.mp4", output="videos/puzzle_short.mp4"):
 
-    clip = VideoFileClip("videos/puzzle.mp4")
+    Path("videos").mkdir(exist_ok=True)
 
-    clip = clip.crop(x_center=clip.w/2, width=1080)
-    clip = clip.resize(height=1920)
+    clip = VideoFileClip(input_video)
 
-    clip.write_videofile("shorts/puzzle_short.mp4")
+    # Resize for vertical format
+    short = clip.resized(height=1920)
+
+    short.write_videofile(
+        output,
+        codec="libx264",
+        audio=False
+    )
+
+    clip.close()
+    short.close()
