@@ -46,5 +46,3 @@ Invoke the only supported entrypoint:
 ```sh
 python scripts/pipeline.py
 ```
-
-The GitHub workflow calls the same script, so references to the removed root-level modules should be updated accordingly.
