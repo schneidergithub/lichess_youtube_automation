@@ -9,7 +9,7 @@ import chess.svg
 
 
 BOARD_SIZE = 720
-INITIAL_HOLD_FRAMES = 2
+INITIAL_HOLD_FRAMES = 60
 MOVE_HOLD_FRAMES = 2
 
 
@@ -82,11 +82,6 @@ def render_frames(puzzle, output_dir="frames"):
     - for each solution move:
       - apply the move
       - render the resulting board with the arrow still visible
-
-    This avoids:
-    - board flipping
-    - square shading artifacts from `lastmove`
-    - move visibility problems at low FPS
     """
     output_path = Path(output_dir)
 
