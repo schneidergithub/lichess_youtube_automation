@@ -1,3 +1,4 @@
+import re
 import shutil
 from io import StringIO
 from pathlib import Path
@@ -64,7 +65,11 @@ def _load_start_board(puzzle):
             for i in range(ply_count):
                 board.push(all_moves[i])
             debug_positions.append(
-                f"ply_count={ply_count}, turn={'white' if board.turn else 'black'}, fen={board.fen()}"
+                (
+                    f"ply_count={ply_count}, "
+                    f"turn={'white' if board.turn else 'black'}, "
+                    f"fen={board.fen()}"
+                )
             )
 
     raise ValueError(
@@ -73,15 +78,12 @@ def _load_start_board(puzzle):
     )
 
 
-def render_frames(puzzle, output_dir="frames"):
+def render_frames(puzzle, output_dir="frames", fps=1):
     """
     Render frames for a Lichess puzzle.
 
-    Frame strategy:
-    - render the initial puzzle position
-    - for each solution move:
-      - apply the move
-      - render the resulting board with the arrow still visible
+    - 60-second countdown before showing the solution
+    - Semi-transparent piece at original square after each move
     """
     output_path = Path(output_dir)
 
@@ -90,11 +92,9 @@ def render_frames(puzzle, output_dir="frames"):
     output_path.mkdir(parents=True, exist_ok=True)
 
     board = _load_start_board(puzzle)
-
-    # Keep orientation fixed from the actual puzzle start position.
     orientation = board.turn
-
     frame_index = 0
+    initial_hold_frames = 60 * fps
 
     def save_svg(svg_text, repeat=1):
         nonlocal frame_index
@@ -106,14 +106,23 @@ def render_frames(puzzle, output_dir="frames"):
             )
             frame_index += 1
 
-    # Initial puzzle position
+    # Initial puzzle position with countdown overlay
     initial_svg = chess.svg.board(
         board,
         orientation=orientation,
         size=BOARD_SIZE,
         coordinates=True,
     )
-    save_svg(initial_svg, repeat=INITIAL_HOLD_FRAMES)
+    for i in range(initial_hold_frames):
+        countdown = 60 - (i // fps)
+        countdown_svg = (
+            f'<text x="{BOARD_SIZE // 2}" y="{BOARD_SIZE // 2}" '
+            'font-size="30" fill="blue" text-anchor="middle" '
+            'dominant-baseline="middle" opacity="0.4">'
+            f"{countdown}</text>"
+        )
+        svg_with_countdown = re.sub(r"(</svg>)", countdown_svg + r"\1", initial_svg)
+        save_svg(svg_with_countdown)
 
     # Render each solution move on the resulting board
     for move_uci in puzzle["solution"]:
@@ -124,6 +133,8 @@ def render_frames(puzzle, output_dir="frames"):
                 f"Illegal solution move {move_uci} for current position: {board.fen()}"
             )
 
+        piece = board.piece_at(move.from_square)
+        from_square = move.from_square
         board.push(move)
 
         move_svg = chess.svg.board(
@@ -133,6 +144,24 @@ def render_frames(puzzle, output_dir="frames"):
             coordinates=True,
             arrows=[chess.svg.Arrow(move.from_square, move.to_square)],
         )
+
+        # Overlay semi-transparent piece at original square
+        if piece:
+            square_name = chess.square_name(from_square)
+            file = ord(square_name[0]) - ord("a")
+            rank = int(square_name[1]) - 1
+            x = file * BOARD_SIZE // 8
+            y = (7 - rank) * BOARD_SIZE // 8 if orientation else rank * BOARD_SIZE // 8
+
+            piece_id = f"{'w' if piece.color else 'b'}{piece.symbol().lower()}"
+            piece_svg = (
+                '<g opacity="0.4">'
+                f'<use href="#{piece_id}" x="{x}" y="{y}" '
+                f'width="{BOARD_SIZE // 8}" height="{BOARD_SIZE // 8}"/>'
+                "</g>"
+            )
+            move_svg = re.sub(r"(</svg>)", piece_svg + r"\1", move_svg)
+
         save_svg(move_svg, repeat=MOVE_HOLD_FRAMES)
 
     return frame_index
