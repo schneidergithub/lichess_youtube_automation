@@ -1,6 +1,7 @@
 import requests
 
 API = "https://lichess.org/api/puzzle/daily"
+#API = "https://lichess.org/api/puzzle/BDAia"
 
 def fetch_puzzle():
     r = requests.get(API)
